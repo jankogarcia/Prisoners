@@ -45,8 +45,20 @@ namespace Prisoners.Core.Services
 
         public IEnumerable<Box> RefreshBoxes(IEnumerable<Box> boxes)
         {
-            // TOOD: Implement this method
-            throw new NotImplementedException();
+            var count = boxes.Count();
+            for (int i = 1; i <= count; i++)
+            {
+                if (i < count)
+                {
+                    boxes.Last(b => b.Number == i).Number = i + 1;
+                }
+                else
+                {
+                    boxes.Last(b => b.Number == count).Number = 1;
+                }
+            }
+
+            return boxes;
         }
 
         private void GenerateSetOfPaperSlips(int numberOfBoxes)

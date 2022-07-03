@@ -27,7 +27,7 @@ namespace Test.Prisoners.Core.Services
         [TestCase(10000)]
         [TestCase(100000)]
         [TestCase(1000000)]
-        public void GenerateBoxes(int numberOfBoxes)
+        public void GenerateBoxesOk(int numberOfBoxes)
         {
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
             var count = boxes.Count();
@@ -47,7 +47,9 @@ namespace Test.Prisoners.Core.Services
         [TestCase(100, 28, 99)]
         [TestCase(1000, 248, 987)]
         [TestCase(10000, 1248, 9187)]
-        public void SwipePaperSlipsByBoxNumber(int numberOfBoxes, int boxNumber1, int boxNumber2)
+        [TestCase(100000, 12448, 91487)]
+        [TestCase(1000000, 121748, 919887)]
+        public void SwipePaperSlipsByBoxNumberOk(int numberOfBoxes, int boxNumber1, int boxNumber2)
         {
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
 
@@ -69,28 +71,27 @@ namespace Test.Prisoners.Core.Services
             Assert.AreNotEqual(paperSlip2, paperSlip4, "Swaping did not work.");
         }
 
-        //TOOD: I need a method to refresh the list of boxes and add some test
-
-        //[TestCase(2)]
-        //[TestCase(10)]
-        //[TestCase(100)]
-        //[TestCase(1000)]
-        //[TestCase(10000)]
+        [TestCase(2)]
+        [TestCase(10)]
+        [TestCase(100)]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        // too heavy
         //[TestCase(100000)]
         //[TestCase(1000000)]
-        //public void RefreshingBoxOk(int numberOfBoxes)
-        //{
-        //    //var boxes = _sut.GenerateBoxes(numberOfBoxes);
-        //    //Assert.IsNotNull(boxes, "boxes are not null");
+        public void RefreshingBoxOk(int numberOfBoxes)
+        {
+            var boxes = _sut.GenerateBoxes(numberOfBoxes);
+            Assert.IsNotNull(boxes, "boxes are not null");
 
-        //    //var randomBoxNumber = _rnd.Next(1, numberOfBoxes);
-        //    //var randomBoxPaperSlipNumber = boxes.First(box => box.Number == randomBoxNumber).PaperSlip.Number;
+            var randomBoxNumber = _rnd.Next(1, numberOfBoxes);
+            var randomBoxPaperSlipNumber = boxes.First(box => box.Number == randomBoxNumber).PaperSlip.Number;
 
-        //    //// refresh the boxes
-        //    //var refresedBoxes = _sut.RefreshBoxes(boxes);
-        //    //var randomBoxPaperSlipNumberRefreshed = refresedBoxes.First(box => box.Number == randomBoxNumber).PaperSlip.Number;
+            // refresh the boxes
+            var refresedBoxes = _sut.RefreshBoxes(boxes);
+            var randomBoxPaperSlipNumberRefreshed = refresedBoxes.First(box => box.Number == randomBoxNumber).PaperSlip.Number;
 
-        //    //Assert.AreNotEqual(randomBoxPaperSlipNumber, randomBoxPaperSlipNumberRefreshed, $"The box list wasnt refreshed, box with number: {randomBoxNumber} has the same paperslip number: {randomBoxPaperSlipNumber}");
-        //}
+            Assert.AreNotEqual(randomBoxPaperSlipNumber, randomBoxPaperSlipNumberRefreshed, $"The box list wasnt refreshed, box with number: {randomBoxNumber} has the same paperslip number: {randomBoxPaperSlipNumber}");
+        }
     }
 }

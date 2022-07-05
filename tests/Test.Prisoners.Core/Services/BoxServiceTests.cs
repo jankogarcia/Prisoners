@@ -30,15 +30,16 @@ namespace Test.Prisoners.Core.Services
         public void GenerateBoxesOk(int numberOfBoxes)
         {
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
+            
             var count = boxes.Count();
             Assert.AreEqual(numberOfBoxes, count, "list of boxes is not same length as expected.");
 
             if (count > 0)
             {
                 var randomNumber = _rnd.Next(1, numberOfBoxes);
-                Assert.IsNotNull(boxes.First(box => box.PaperSlip == randomNumber), $"list of boxes does not contain random number: { randomNumber }.");
+                Assert.IsNotNull(Array.FindIndex(boxes, b => b == randomNumber), $"list of boxes does not contain random number: { randomNumber }.");
 
-                var distinctPaperSlips = boxes.Select(box => box.PaperSlip).ToList().Distinct().Count();
+                var distinctPaperSlips = boxes.ToList().Distinct().Count();
                 Assert.AreEqual(numberOfBoxes, distinctPaperSlips, $"Box is not correctly created, its missing a paper slip");
             }
         }
@@ -53,22 +54,16 @@ namespace Test.Prisoners.Core.Services
         {
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
 
-            var box1 = boxes.First(box => box.Number == boxNumber1);
-            var paperSlip1 = box1.PaperSlip;
+            var box1paperSlip = boxes[boxNumber1];
+            var box2paperSlip = boxes[boxNumber2];
 
-            var box2 = boxes.First(box => box.Number == boxNumber2);
-            var paperSlip2 = box2.PaperSlip;
+            var swipedBoxes = boxes.SwipeBoxesValue(boxNumber1, boxNumber2);
+            var paperSlip3 = swipedBoxes[boxNumber1];
 
-            var swipedBoxes = boxes.SwipeBoxPaperSlips(boxNumber1, boxNumber2);
+            Assert.AreNotEqual(box1paperSlip, paperSlip3, "Swaping did not work.");
+            var paperSlip4 = swipedBoxes[boxNumber2];
 
-            box1 = boxes.First(box => box.Number == boxNumber1);
-            var paperSlip3 = box1.PaperSlip;
-            Assert.AreNotEqual(paperSlip1, paperSlip3, "Swaping did not work.");
-
-            box2 = boxes.First(box => box.Number == boxNumber2);
-            var paperSlip4 = box2.PaperSlip;
-
-            Assert.AreNotEqual(paperSlip2, paperSlip4, "Swaping did not work.");
+            Assert.AreNotEqual(box2paperSlip, paperSlip4, "Swaping did not work.");
         }
 
         [TestCase(2)]
@@ -76,20 +71,20 @@ namespace Test.Prisoners.Core.Services
         [TestCase(100)]
         [TestCase(1000)]
         [TestCase(10000)]
-        // too heavy
-        //[TestCase(100000)]
-        //[TestCase(1000000)]
+        [TestCase(100000)]
+        [TestCase(1000000)]
+        [TestCase(10000000)]
         public void RefreshingBoxOk(int numberOfBoxes)
         {
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
             Assert.IsNotNull(boxes, "boxes are not null");
 
             var randomBoxNumber = _rnd.Next(1, numberOfBoxes);
-            var randomBoxPaperSlipNumber = boxes.First(box => box.Number == randomBoxNumber).PaperSlip;
+            var randomBoxPaperSlipNumber = Array.FindIndex(boxes, b => b == randomBoxNumber);
 
-            // refresh the boxes
+            //// refresh the boxes
             var refresedBoxes = _sut.RefreshBoxes(boxes);
-            var randomBoxPaperSlipNumberRefreshed = refresedBoxes.First(box => box.Number == randomBoxNumber).PaperSlip;
+            var randomBoxPaperSlipNumberRefreshed = Array.FindIndex(refresedBoxes, b => b == randomBoxNumber);
 
             Assert.AreNotEqual(randomBoxPaperSlipNumber, randomBoxPaperSlipNumberRefreshed, $"The box list wasnt refreshed, box with number: {randomBoxNumber} has the same paperslip number: {randomBoxPaperSlipNumber}");
         }

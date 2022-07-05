@@ -1,6 +1,4 @@
-﻿using Prisoners.Core.Models;
-
-namespace Prisoners.Core.Services
+﻿namespace Prisoners.Core.Services
 {
     public class RandomBoxService : IBoxService
     {
@@ -11,50 +9,30 @@ namespace Prisoners.Core.Services
             _rnd = new Random();
         }
 
-        public IEnumerable<Box> GenerateBoxes(int numberOfBoxes)
+        public int [] GenerateBoxes(int numberOfBoxes)
         {
             if (numberOfBoxes <= 0)
             {
-                return Enumerable.Empty<Box>();
+                return new int[0];
             }
             
             GenerateSetOfPaperSlips(numberOfBoxes);
-            var boxes = new List<Box>();
-            for (int i = 1; i <= numberOfBoxes; i++)
-            {
-                boxes.Add(GetBox(i, _paperSlipsNumbers[i - 1]));
-            }
-
-            return boxes;
-
-            // TOOD: implement a Iterator pattern to use yield, I will see
-
-            //if (numberOfBoxes > 0)
-            //{
-            //    GenerateSetOfPaperSlips(numberOfBoxes);
-            //    for (int i = 1; i <= numberOfBoxes; i++)
-            //    {
-            //        yield return GetBox(i, _numbers[i - 1]);
-            //    }
-            //}
-            //else
-            //{
-            //    yield break;
-            //}
+            return _paperSlipsNumbers;
         }
 
-        public IEnumerable<Box> RefreshBoxes(IEnumerable<Box> boxes)
+        public int[] RefreshBoxes(int[] boxes)
         {
-            var count = boxes.Count();
-            for (int i = 1; i <= count; i++)
+            var temp = boxes[0];
+
+            for (int i = 0; i < boxes.Length; i++)
             {
-                if (i < count)
+                if (i == boxes.Length - 1)
                 {
-                    boxes.Last(b => b.Number == i).Number = i + 1;
+                    boxes[boxes.Length - 1] = temp;
                 }
                 else
                 {
-                    boxes.Last(b => b.Number == count).Number = 1;
+                    boxes[i] = boxes[i + 1];
                 }
             }
 
@@ -63,18 +41,5 @@ namespace Prisoners.Core.Services
 
         private void GenerateSetOfPaperSlips(int numberOfBoxes)
             => _paperSlipsNumbers = Enumerable.Range(1, numberOfBoxes).OrderBy(i => _rnd.Next()).ToArray();
-
-        private Box GetBox(int boxnumber, int paperSlipNumber)
-            => new Box 
-            {
-                Number = boxnumber, 
-                PaperSlip = paperSlipNumber
-            };
-
-        private PaperSlip GetPaperSlip(int paperSlipNumber)
-            => new PaperSlip 
-            {
-                Number = paperSlipNumber
-            };
     }
 }

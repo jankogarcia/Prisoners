@@ -1,16 +1,14 @@
-﻿using Prisoners.Core.Models;
-
-namespace Prisoners.Core.Services
+﻿namespace Prisoners.Core.Services
 {
     public class LoopFollowingPrisonerService : IPrisonerService
     {
         private IBoxService _boxService;
 
-        private int[] _numberOfPrisoners;
+        private int _numberOfPrisoners;
 
         private int[] _pathResultsByPrisoner;
 
-        private Box[] _boxes;
+        private int[] _boxes;
         public LoopFollowingPrisonerService(IBoxService boxService)
         {
             _boxService = boxService;
@@ -18,36 +16,36 @@ namespace Prisoners.Core.Services
 
         public void SetNumberOfPrisoners(int numberOfPrisoners)
         {
-            _numberOfPrisoners = new int[numberOfPrisoners];
+            _numberOfPrisoners = numberOfPrisoners;
             _boxes = _boxService.GenerateBoxes(numberOfPrisoners).ToArray();
         }
 
         public void StartIteratingPrisoners()
         {
-            _pathResultsByPrisoner = new int[_numberOfPrisoners.Length];
-            for (int i = 0; i < _numberOfPrisoners.Length; i++)
+            _pathResultsByPrisoner = new int[_numberOfPrisoners];
+            for (int i = 0; i < _numberOfPrisoners; i++)
             {
                 _pathResultsByPrisoner[i] = CheckPrisonerPath(i);
             }
         }
 
-        public IEnumerable<int> GetResults()
+        public int [] GetResults()
             => _pathResultsByPrisoner;
 
         private int CheckPrisonerPath(int prisoner)
         {
-            var paperSlipNumber = GetBoxByIndex(prisoner).PaperSlip;
-            var counter = 1;
+            var paperSlipNumber = GetBoxByIndex(prisoner);
+            var count = 1;
             while (paperSlipNumber != prisoner + 1)
             {
-                paperSlipNumber = GetBoxByIndex(paperSlipNumber - 1).PaperSlip;
-                counter++;
+                paperSlipNumber = GetBoxByIndex(paperSlipNumber - 1);
+                count ++;
             }
 
-            return counter;
+            return count;
         }
 
-        private Box GetBoxByIndex(int index)
+        private int GetBoxByIndex(int index) 
             => _boxes[index];
     }
 }

@@ -4,7 +4,7 @@ namespace Prisoners.Core.Services
 {
     public interface IBoxService
     {
-        IEnumerable<Box> GenerateBoxes(int numberOfBoxes);
-        IEnumerable<Box> RefreshBoxes(IEnumerable<Box> boxes);
+        int[] GenerateBoxes(int numberOfBoxes);
+        int[] RefreshBoxes(int[] boxes);
     }
 }

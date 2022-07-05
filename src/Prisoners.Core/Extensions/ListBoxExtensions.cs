@@ -9,9 +9,9 @@ namespace Prisoners.Core.Extensions
         {
             var box1 = boxes.Single(b => b.Number == boxNumber1);
             var box2 = boxes.Single(b => b.Number == boxNumber2);
-            var temp = box1.PaperSlip.Number;
-            box1.PaperSlip.Number = box2.PaperSlip.Number;
-            box2.PaperSlip.Number = temp;
+            var temp = box1.PaperSlip;
+            box1.PaperSlip = box2.PaperSlip;
+            box2.PaperSlip = temp;
 
             return boxes;
         }

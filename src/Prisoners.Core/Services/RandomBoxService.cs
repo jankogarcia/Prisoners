@@ -68,7 +68,7 @@ namespace Prisoners.Core.Services
             => new Box 
             {
                 Number = boxnumber, 
-                PaperSlip = GetPaperSlip(paperSlipNumber)
+                PaperSlip = paperSlipNumber
             };
 
         private PaperSlip GetPaperSlip(int paperSlipNumber)

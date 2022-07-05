@@ -36,9 +36,9 @@ namespace Test.Prisoners.Core.Services
             if (count > 0)
             {
                 var randomNumber = _rnd.Next(1, numberOfBoxes);
-                Assert.IsNotNull(boxes.First(box => box.PaperSlip.Number == randomNumber), $"list of boxes does not contain random number: { randomNumber }.");
+                Assert.IsNotNull(boxes.First(box => box.PaperSlip == randomNumber), $"list of boxes does not contain random number: { randomNumber }.");
 
-                var distinctPaperSlips = boxes.Select(box => box.PaperSlip.Number).ToList().Distinct().Count();
+                var distinctPaperSlips = boxes.Select(box => box.PaperSlip).ToList().Distinct().Count();
                 Assert.AreEqual(numberOfBoxes, distinctPaperSlips, $"Box is not correctly created, its missing a paper slip");
             }
         }
@@ -54,19 +54,19 @@ namespace Test.Prisoners.Core.Services
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
 
             var box1 = boxes.First(box => box.Number == boxNumber1);
-            var paperSlip1 = box1.PaperSlip.Number;
+            var paperSlip1 = box1.PaperSlip;
 
             var box2 = boxes.First(box => box.Number == boxNumber2);
-            var paperSlip2 = box2.PaperSlip.Number;
+            var paperSlip2 = box2.PaperSlip;
 
             var swipedBoxes = boxes.SwipeBoxPaperSlips(boxNumber1, boxNumber2);
 
             box1 = boxes.First(box => box.Number == boxNumber1);
-            var paperSlip3 = box1.PaperSlip.Number;
+            var paperSlip3 = box1.PaperSlip;
             Assert.AreNotEqual(paperSlip1, paperSlip3, "Swaping did not work.");
 
             box2 = boxes.First(box => box.Number == boxNumber2);
-            var paperSlip4 = box2.PaperSlip.Number;
+            var paperSlip4 = box2.PaperSlip;
 
             Assert.AreNotEqual(paperSlip2, paperSlip4, "Swaping did not work.");
         }
@@ -85,11 +85,11 @@ namespace Test.Prisoners.Core.Services
             Assert.IsNotNull(boxes, "boxes are not null");
 
             var randomBoxNumber = _rnd.Next(1, numberOfBoxes);
-            var randomBoxPaperSlipNumber = boxes.First(box => box.Number == randomBoxNumber).PaperSlip.Number;
+            var randomBoxPaperSlipNumber = boxes.First(box => box.Number == randomBoxNumber).PaperSlip;
 
             // refresh the boxes
             var refresedBoxes = _sut.RefreshBoxes(boxes);
-            var randomBoxPaperSlipNumberRefreshed = refresedBoxes.First(box => box.Number == randomBoxNumber).PaperSlip.Number;
+            var randomBoxPaperSlipNumberRefreshed = refresedBoxes.First(box => box.Number == randomBoxNumber).PaperSlip;
 
             Assert.AreNotEqual(randomBoxPaperSlipNumber, randomBoxPaperSlipNumberRefreshed, $"The box list wasnt refreshed, box with number: {randomBoxNumber} has the same paperslip number: {randomBoxPaperSlipNumber}");
         }

@@ -3,7 +3,7 @@
     public class Box
     {
         public int Number { get; set; }
-        public PaperSlip PaperSlip { get; set; }
+        public int PaperSlip { get; set; }
     }
 
 }

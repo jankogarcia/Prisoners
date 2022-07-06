@@ -2,19 +2,21 @@
 using Prisoners.Core.Services;
 using System.Linq;
 
-
 namespace Test.Prisoners.Core.Services
 {
     [TestFixture]
-    public class PrisonerServiceTests
+    public class RandomBoxPrisonerServiceTests
     {
-        private LoopFollowingPrisonerService _sut;
-        private const float EXPECTECTED_SUCCESS_RATE = 0.31f; 
+        private RandomBoxPrisonerService _sut;
+        private RandomService _randomService;
+
+        private const float EXPECTECTED_SUCCESS_RATE = 0.5f;
 
         [SetUp]
         public void Setup() 
         {
-            _sut = new LoopFollowingPrisonerService(new RandomBoxService());
+            _randomService = new RandomService();
+            _sut = new RandomBoxPrisonerService(new RandomBoxService(_randomService), _randomService);
         }
 
         [TestCase(10)]
@@ -23,11 +25,12 @@ namespace Test.Prisoners.Core.Services
         [TestCase(10000)]
         [TestCase(100000)]
         [TestCase(1000000)]
-        public void GeneratePrisonersOk(int prisonersCount) 
+        public void GeneratePrisonersOk(int prisonersCount)
         {
             Assert.DoesNotThrow(() => _sut.SetNumberOfPrisoners(prisonersCount));
         }
 
+        [Ignore("This test are for checking if the success rate is the expected")]
         [TestCase(10)]
         [TestCase(100)]
         [TestCase(1000)]
@@ -49,5 +52,4 @@ namespace Test.Prisoners.Core.Services
             Assert.GreaterOrEqual(succedeed, successRate, $"Number of succedeed prisoners didnt satisficed the rule at: {succedeed} successed prisoners out of {prisonersCount}");
         }
     }
-
 }

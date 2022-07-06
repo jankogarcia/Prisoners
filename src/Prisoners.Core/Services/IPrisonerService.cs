@@ -1,5 +1,4 @@
-﻿
-namespace Prisoners.Core.Services
+﻿namespace Prisoners.Core.Services
 {
     public interface IPrisonerService
     {

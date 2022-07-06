@@ -1,22 +1,33 @@
 ﻿namespace Prisoners.Core.Services
 {
-    public class LoopFollowingPrisonerService : IPrisonerService
+    public class RandomBoxPrisonerService : IPrisonerService
     {
         private readonly IBoxService _boxService;
+        private readonly IRandomService _randomService;
 
         private int _numberOfPrisoners;
 
         private int[] _pathResultsByPrisoner;
 
         private int[] _boxes;
-        public LoopFollowingPrisonerService(IBoxService boxService)
+
+        private int _maximumAttemps;
+
+        private const int DIVIDER = 2;
+
+        public RandomBoxPrisonerService(IBoxService boxService, IRandomService randomService)
         {
             _boxService = boxService;
+            _randomService = randomService;
         }
+
+        public int[] GetResults()
+            => _pathResultsByPrisoner;
 
         public void SetNumberOfPrisoners(int numberOfPrisoners)
         {
             _numberOfPrisoners = numberOfPrisoners;
+            _maximumAttemps = _numberOfPrisoners / DIVIDER;
             _boxes = _boxService.GenerateBoxes(numberOfPrisoners);
         }
 
@@ -29,23 +40,23 @@
             }
         }
 
-        public int [] GetResults()
-            => _pathResultsByPrisoner;
-
         private int CheckPrisonerPath(int prisoner)
         {
-            var paperSlipNumber = GetBoxByIndex(prisoner);
+            var paperSlip = GetBoxByIndex(GetRandomIndex());
             var count = 1;
-            while (paperSlipNumber != prisoner + 1)
+            while (paperSlip != prisoner + 1 && count <= _maximumAttemps)
             {
-                paperSlipNumber = GetBoxByIndex(paperSlipNumber - 1);
-                count ++;
+                paperSlip = GetBoxByIndex(GetRandomIndex());
+                count++;
             }
-
             return count;
         }
 
-        private int GetBoxByIndex(int index) 
+        private int GetBoxByIndex(int index)
             => _boxes[index];
+
+        // TOOD: to prevent this method to get repeated numbers within same iteration
+        private int GetRandomIndex()
+            => _randomService.NextWithinLimit(_numberOfPrisoners) - 1;
     }
 }

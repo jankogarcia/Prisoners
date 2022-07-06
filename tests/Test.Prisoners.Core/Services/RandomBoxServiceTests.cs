@@ -7,16 +7,16 @@ using System.Linq;
 namespace Test.Prisoners.Core.Services
 {
     [TestFixture]
-    public class BoxServiceTests
+    public class RandomBoxServiceTests
     {
         private RandomBoxService _sut;
-        private Random _rnd;
+        private RandomService _randomService;
 
         [SetUp]
         public void Setup()
         {
-            _sut = new RandomBoxService();
-            _rnd = new Random();
+            _randomService = new RandomService();
+            _sut = new RandomBoxService(_randomService);
         }
 
         [TestCase(0)]
@@ -36,7 +36,7 @@ namespace Test.Prisoners.Core.Services
 
             if (count > 0)
             {
-                var randomNumber = _rnd.Next(1, numberOfBoxes);
+                var randomNumber = _randomService.NextWithinLimit(numberOfBoxes);
                 Assert.IsNotNull(Array.FindIndex(boxes, b => b == randomNumber), $"list of boxes does not contain random number: { randomNumber }.");
 
                 var distinctPaperSlips = boxes.ToList().Distinct().Count();
@@ -79,7 +79,7 @@ namespace Test.Prisoners.Core.Services
             var boxes = _sut.GenerateBoxes(numberOfBoxes);
             Assert.IsNotNull(boxes, "boxes are not null");
 
-            var randomBoxNumber = _rnd.Next(1, numberOfBoxes);
+            var randomBoxNumber = _randomService.NextWithinLimit(numberOfBoxes);
             var randomBoxPaperSlipNumber = Array.FindIndex(boxes, b => b == randomBoxNumber);
 
             //// refresh the boxes

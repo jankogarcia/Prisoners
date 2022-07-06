@@ -2,11 +2,12 @@
 {
     public class RandomBoxService : IBoxService
     {
-        private Random _rnd;
         private int[] _paperSlipsNumbers;
-        public RandomBoxService()
+        private readonly IRandomService _randomService;
+
+        public RandomBoxService(IRandomService randomService)
         {
-            _rnd = new Random();
+            _randomService = randomService;
         }
 
         public int [] GenerateBoxes(int numberOfBoxes)
@@ -40,6 +41,6 @@
         }
 
         private void GenerateSetOfPaperSlips(int numberOfBoxes)
-            => _paperSlipsNumbers = Enumerable.Range(1, numberOfBoxes).OrderBy(i => _rnd.Next()).ToArray();
+            => _paperSlipsNumbers = _randomService.GenerateRandomList(numberOfBoxes);
     }
 }

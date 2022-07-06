@@ -1,6 +1,4 @@
-﻿using Prisoners.Core.Models;
-
-namespace Prisoners.Core.Services
+﻿namespace Prisoners.Core.Services
 {
     public interface IBoxService
     {

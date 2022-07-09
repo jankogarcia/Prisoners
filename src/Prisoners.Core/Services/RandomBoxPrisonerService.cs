@@ -36,27 +36,46 @@
             _pathResultsByPrisoner = new int[_numberOfPrisoners];
             for (int i = 0; i < _numberOfPrisoners; i++)
             {
-                _pathResultsByPrisoner[i] = CheckPrisonerPath(i);
+                _pathResultsByPrisoner[i] = CheckPrisonerPath(i, GetPrisonerRandomPath());
             }
         }
 
-        private int CheckPrisonerPath(int prisoner)
+        private int CheckPrisonerPath(int prisoner, int[] loop)
         {
-            var paperSlip = GetBoxByIndex(GetRandomIndex());
             var count = 1;
-            while (paperSlip != prisoner + 1 && count <= _maximumAttemps)
+            for (int i = 0; i < loop.Length; i++)
             {
-                paperSlip = GetBoxByIndex(GetRandomIndex());
-                count++;
+                var paperSlip = GetBoxByIndex(loop[i] - 1);
+                if (paperSlip != prisoner + 1 && count <= _maximumAttemps)
+                {
+                    count++;
+                    continue;
+                }
+                else 
+                {
+                    // prisoner made it in range
+                    return count;
+                }
             }
+            // prisoner didn't find paperslip.
             return count;
         }
 
         private int GetBoxByIndex(int index)
             => _boxes[index];
 
-        // TOOD: to prevent this method to get repeated numbers within same iteration
-        private int GetRandomIndex()
-            => _randomService.NextWithinLimit(_numberOfPrisoners) - 1;
+        private int[] GetPrisonerRandomPath()
+        {
+            var res = new List<int>();
+            while(res.Count() < _maximumAttemps)
+            {
+                int val = _randomService.Next(_numberOfPrisoners) + 1;
+                if (!res.Contains(val))
+                {
+                    res.Add(val);
+                }
+            }
+            return res.ToArray();
+        }
     }
 }

@@ -27,7 +27,8 @@ namespace Test.Prisoners.Core.Services
             Assert.DoesNotThrow(() => _sut.SetNumberOfPrisoners(prisonersCount));
         }
 
-        [Ignore("This test are for checking if the success rate is the expected")]
+        [Explicit("This test are for checking if the success rate is the expected")]
+        [TestCase(2)]
         [TestCase(10)]
         [TestCase(100)]
         [TestCase(1000)]

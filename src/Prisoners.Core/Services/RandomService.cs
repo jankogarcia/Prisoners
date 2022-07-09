@@ -12,8 +12,8 @@
         public int NextWithinLimit(int randomLimit)
             => _rnd.Next(1, randomLimit);
 
-        public int Next()
-            => _rnd.Next();
+        public int Next(int maxValue)
+            => _rnd.Next(maxValue);
 
         public int[] GenerateRandomList(int randomLimit)
             => Enumerable.Range(1, randomLimit).OrderBy(x => _rnd.Next()).ToArray();

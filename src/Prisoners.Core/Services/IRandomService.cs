@@ -3,7 +3,7 @@
     public interface IRandomService
     {
         int[] GenerateRandomList(int randomLimit);
-        int Next();
+        int Next(int maxValue);
         int NextWithinLimit(int randomLimit);
     }
 }

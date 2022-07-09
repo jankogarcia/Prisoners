@@ -9,6 +9,11 @@
         private int[] _pathResultsByPrisoner;
 
         private int[] _boxes;
+        
+        private int _maximumAttemps;
+
+        private const int DIVIDER = 2;
+
         public LoopFollowingPrisonerService(IBoxService boxService)
         {
             _boxService = boxService;
@@ -17,6 +22,7 @@
         public void SetNumberOfPrisoners(int numberOfPrisoners)
         {
             _numberOfPrisoners = numberOfPrisoners;
+            _maximumAttemps = _numberOfPrisoners / DIVIDER;
             _boxes = _boxService.GenerateBoxes(numberOfPrisoners);
         }
 
@@ -36,7 +42,7 @@
         {
             var paperSlipNumber = GetBoxByIndex(prisoner);
             var count = 1;
-            while (paperSlipNumber != prisoner + 1)
+            while (paperSlipNumber != prisoner + 1 && count <= _maximumAttemps)
             {
                 paperSlipNumber = GetBoxByIndex(paperSlipNumber - 1);
                 count ++;

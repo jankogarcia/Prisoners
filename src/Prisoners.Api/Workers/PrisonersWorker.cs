@@ -2,11 +2,11 @@
 
 namespace Prisoners.Api.Workers
 {
-    public class RandomPathPrisonersWorker : IPrisonersWorker
+    public class PrisonersWorker : IPrisonersWorker
     {
         private readonly IPrisonerService _prisonerService;
 
-        public RandomPathPrisonersWorker(IPrisonerService prisonerService)
+        public PrisonersWorker(IPrisonerService prisonerService)
         {
             _prisonerService = prisonerService;
         }
@@ -23,10 +23,9 @@ namespace Prisoners.Api.Workers
         }
 
         private int[] GetResults(int prisoners)
-        {
-            _prisonerService.SetNumberOfPrisoners(prisoners);
-            _prisonerService.StartIteratingPrisoners();
-            return _prisonerService.GetResults();
-        }
+            => _prisonerService
+            .SetNumberOfPrisoners(prisoners)
+            .StartIteratingPrisoners()
+            .GetResults();
     }
 }

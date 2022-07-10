@@ -19,20 +19,22 @@
             _boxService = boxService;
         }
 
-        public void SetNumberOfPrisoners(int numberOfPrisoners)
+        public IPrisonerService SetNumberOfPrisoners(int numberOfPrisoners)
         {
             _numberOfPrisoners = numberOfPrisoners;
             _maximumAttemps = _numberOfPrisoners / DIVIDER;
             _boxes = _boxService.GenerateBoxes(numberOfPrisoners);
+            return this;
         }
 
-        public void StartIteratingPrisoners()
+        public IPrisonerService StartIteratingPrisoners()
         {
             _pathResultsByPrisoner = new int[_numberOfPrisoners];
             for (int i = 0; i < _numberOfPrisoners; i++)
             {
                 _pathResultsByPrisoner[i] = CheckPrisonerPath(i);
             }
+            return this;
         }
 
         public int [] GetResults()

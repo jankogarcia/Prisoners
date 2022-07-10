@@ -38,9 +38,11 @@ namespace Test.Prisoners.Core.Services
         //[TestCase(1000000)]
         public void IteratePrisonersOk(int prisonersCount)
         {
-            _sut.SetNumberOfPrisoners(prisonersCount);
-            _sut.StartIteratingPrisoners();
-            var results = _sut.GetResults();
+            var results = _sut
+                .SetNumberOfPrisoners(prisonersCount)
+                .StartIteratingPrisoners()
+                .GetResults();
+
             Assert.IsNotNull(results);
 
             var attempts = prisonersCount / 2;

@@ -13,6 +13,7 @@ namespace Prisoners.Api.Workers
 
         public async Task<int[][]> GetPathsForPrisonersAsync(int iterations, int prisoners)
         {
+            // add a Task.Run() ???*
             var result = new int[iterations][];
             Parallel.For(0, iterations, i =>
             {
